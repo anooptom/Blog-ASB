@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anoop Tom — Blog</title>
+<meta name="description" content="Personal blog by Anoop Tom.">
+
+<style>
+  
+  :root {
+    --bg: #ffffff;
+    --ink: #242424;
+    --ink-soft: #6b6b6b;
+    --line: #e6e6e6;
+    --accent: #1a8917;
+    --avatar-bg: #242424;
+    --max-width: 680px;
+    --feed-width: 700px;
+
+    --font-serif: Georgia, "Times New Roman", "Iowan Old Style", serif;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* ---------- Top nav ---------- */
+
+  .topnav {
+    border-bottom: 1px solid var(--line);
+    padding: 18px 24px;
+  }
+
+  .topnav__inner {
+    max-width: var(--feed-width);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .brand__dot { color: var(--accent); }
+
+  .write-btn {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- Layout shell ---------- */
+
+  #app {
+    max-width: var(--feed-width);
+    margin: 0 auto;
+    padding: 40px 24px 100px;
+    min-height: 55vh;
+  }
+
+  /* ---------- Home / feed view ---------- */
+
+  .feed-intro {
+    margin-bottom: 36px;
+  }
+
+  .feed-intro__eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+
+  .feed-intro h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(1.9rem, 4.5vw, 2.4rem);
+    margin: 0 0 10px;
+    line-height: 1.2;
+  }
+
+  .feed-intro p {
+    color: var(--ink-soft);
+    max-width: 52ch;
+    margin: 0;
+  }
+
+  .story-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .story {
+    display: block;
+    text-decoration: none;
+    color: var(--ink);
+    padding: 32px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .story:last-child { border-bottom: 1px solid var(--line); }
+
+  .story__byline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--avatar-bg);
+    color: #fff;
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .story__author {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .story__grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .story__title {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.45rem;
+    line-height: 1.3;
+    margin: 0 0 8px;
+  }
+
+  .story:hover .story__title { text-decoration: underline; }
+
+  .story__excerpt {
+    font-family: var(--font-serif);
+    color: var(--ink-soft);
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .story__thumb {
+    flex-shrink: 0;
+    width: 112px;
+    height: 112px;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #1a8917 0%, #0f1f1e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .story__thumb svg { width: 42px; height: 42px; opacity: 0.85; }
+
+  .story__meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+  }
+
+  .story__tag {
+    background: #f2f2f2;
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 0.75rem;
+  }
+
+  .story__dot { opacity: 0.6; }
+
+  /* ---------- Article view ---------- */
+
+  .article-view { animation: fadeIn 0.28s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    padding: 0;
+    margin-bottom: 32px;
+  }
+
+  .back-link:hover { color: var(--ink); text-decoration: underline; }
+
+  .article__tag {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: var(--accent);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin: 0 0 14px;
+  }
+
+  .article__title {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(1.9rem, 5vw, 2.7rem);
+    line-height: 1.2;
+    margin: 0 0 12px;
+  }
+
+  .article__subtitle {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 1.15rem;
+    line-height: 1.45;
+    margin: 0 0 28px;
+  }
+
+  .byline {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 36px;
+  }
+
+  .avatar--lg {
+    width: 44px;
+    height: 44px;
+    font-size: 0.95rem;
+  }
+
+  .byline__name {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .byline__sub {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+  }
+
+  .article__body {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    line-height: 1.7;
+  }
+
+  .article__body p { margin: 0 0 26px; }
+
+  .article__body h2 {
+    font-family: var(--font-serif);
+    font-size: 1.55rem;
+    margin: 44px 0 18px;
+    line-height: 1.3;
+  }
+
+  .article__lead::first-letter {
+    font-family: var(--font-serif);
+    font-size: 3.3em;
+    font-weight: 700;
+    float: left;
+    line-height: 0.8;
+    padding: 6px 10px 0 0;
+    color: var(--ink);
+  }
+
+  .article__footnote {
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+    padding-top: 24px;
+    margin-top: 12px;
+  }
+
+  .article__tags-footer {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 40px 0 32px;
+  }
+
+  .pill {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    background: #f2f2f2;
+    padding: 8px 16px;
+    border-radius: 100px;
+  }
+
+  .article__actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    padding: 18px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .article__actions span { display: inline-flex; align-items: center; gap: 6px; }
+
+  /* ---------- Footer ---------- */
+
+  .site-footer {
+    border-top: 1px solid var(--line);
+    padding: 28px 24px 48px;
+    text-align: center;
+  }
+
+  .site-footer p {
+    max-width: var(--feed-width);
+    margin: 0 auto;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- Responsive ---------- */
+
+  @media (max-width: 520px) {
+    #app { padding: 28px 18px 72px; }
+    .story__grid { flex-direction: column-reverse; gap: 14px; }
+    .story__thumb { width: 100%; height: 160px; }
+    .article__body { font-size: 1.1rem; }
+  }
+</style>
+</head>
+<body>
+
+  <nav class="topnav">
+    <div class="topnav__inner">
+      <a href="#/" class="brand" id="homeLink">Anoop Tom<span class="brand__dot">.</span></a>
+      <span class="write-btn">Blog</span>
+    </div>
+  </nav>
+
+  <main id="app">
+
+    <!-- HOME / FEED VIEW -->
+    <section id="homeView" class="feed-view">
+      <div class="feed-intro">
+        <p class="feed-intro__eyebrow">Notes &amp; essays</p>
+        <h1>Hi, I'm Anoop</h1>
+        <p>Sec A , MBA</p>
+      </div>
+      <div id="storyList" class="story-list" role="list"></div>
+    </section>
+
+    <!-- ARTICLE VIEW -->
+    <section id="articleView" class="article-view" hidden>
+      <button id="backBtn" class="back-link" type="button">&larr; Back to all stories</button>
+      <article id="articleContent"></article>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 Anoop Tom</p>
+  </footer>
+
+<script>
+  /**
+   * ARTICLES — the only place you need to edit to publish a new post.
+   * Copy the example object, give it a unique slug, fill in the
+   * fields, and add it to the array below. Everything else — the
+   * home feed, the reading view, tags, byline — updates automatically.
+   *
+   *   slug      - unique id, no spaces, used in the URL
+   *   title     - headline
+   *   subtitle  - italic sub-headline shown under the title
+   *   date      - human readable date
+   *   readTime  - e.g. "6 min read"
+   *   tags      - array of short strings
+   *   excerpt   - shown on the home feed card
+   *   content   - array of blocks. Each block is either:
+   *                 { type: "p", text: "..." }   → paragraph
+   *                 { type: "h2", text: "..." }  → section heading
+   */
+  const AUTHOR = { name: "Anoop Tom", initials: "AT", bio: "Sec A, MBA" };
+
+const ARTICLES = [
+{
+  slug: "competitive-parity-strategy",
+  title: "Competitive Parity: When Following Your Competitors is Smart Strategy",
+  subtitle: "Why a bank launching UPI because rivals have it is actually strategic thinking, not laziness.",
+  date: "Jul 20, 2026",
+  readTime: "4 min read",
+  tags: ["Strategy", "Business", "MBA"],
+  excerpt: "A bank launches UPI payments because every rival already has them. It sounds like lazy strategy—just copying competitors. But it's actually something strategic: Competitive Parity.",
+
+  content: [
+    {
+      type: "p",
+      text: "A bank launches UPI payments because every rival already has them. It sounds like lazy strategy, just copying competitors. But it's actually something strategic: Competitive Parity. Competitive parity means matching what your competitors offer so you don't fall behind. It's not about being better or differen ,it's about staying in the game. If every bank offers UPI and yours doesn't, customers will just switch to one that does. You're not trying to win yet; you're trying to survive.",
+      isLead: true
+    },
+
+    { type: "h2", text: "Why It Matters" },
+    {
+      type: "p",
+      text: "Think of parity as the \"price of admission.\" Before a bank can compete on customer service, interest rates, or innovation, it must first offer what customers expect as basic. Twenty years ago, online banking was special. Today, it's table stakes. A customer who can't pay with UPI will leave before they even consider your interest rates."
+    },
+    {
+      type: "p",
+      text: "This is defensive strategy by avoiding competitive disadvantage rather than building competitive advantage. Without parity, no amount of differentiation saves you. Without UPI, your superior app design doesn't matter because customers have already gone to your competitors."
+    },
+
+    { type: "h2", text: "Parity Alone Isn't Enough" },
+    {
+      type: "p",
+      text: "Here's the catch: having UPI doesn't make you better than banks with UPI. You're equal. So real competitive advantage comes after you achieve parity by bundling UPI with something unique, like AI-powered financial advice, better security, or exclusive rewards."
+    },
+    {
+      type: "p",
+      text: "Think of Netflix. It didn't invent streaming, but it achieved parity with competitors and then won on better content and user experience. Apple didn't invent the smartphone, but it matched what others offered and then built a superior ecosystem."
+    },
+
+    { type: "h2", text: "The Bottom Line" },
+    {
+      type: "p",
+      text: "Launching UPI because rivals have it isn't settling for mediocrity , it's smart business. You can't build a winning strategy from a losing position. Once you achieve parity, then you innovate to differentiate. Without parity, you're already out of the game."
+    }
+  ]
+},
+{
+  slug: "what-instagram-actually-knows-about-you",
+  title: "What Instagram Really Knows About You",
+  subtitle: "A closer look at what Meta actually collects on Instagram, how it gets collected, and why the whole business depends on it",
+  date: "Jul 12, 2026",
+  readTime: "5 min read",
+  tags: ["Business", "Social Media", "Data Privacy"],
+  excerpt: "A few weeks ago, I was talking to a friend about buying a new phone. That got me curious about what Instagram actually knows.",
+
+  content: [
+    {
+      type: "p",
+      text: "A few weeks ago, I was talking to a friend about buying a new phone. I hadn't searched for it, visited any shopping websites, or typed anything related to it. But later that day, Instagram started showing me ads for smartphones and accessories. I don't actually think Instagram is secretly listening through my microphone , there's no solid evidence for that, and Meta has denied it repeatedly. What interested me was why my first reaction was, 'How did Instagram know?' That question made me look into what Meta actually collects, and the answer turned out to be far more interesting than I expected.",
+      isLead: true
+    },
+    { type: "h2", text: "It's not just about what you post" },
+    { type: "p", text: "Some information is obvious like your name, email, phone number, birthday, and anything you add to your profile. What surprised me was everything collected beyond that. If you've given permission, Instagram can access photos in your camera roll, saved drafts, voice recordings used in its features, and conversations with Meta AI." },
+    { type: "p", text: "More importantly, it tracks your behavior. How long you watch a Reel, whether you replay a Story, what you search for, and even what you ignore. It doesn't feel like data collection because you're simply using the app, but that's exactly how your profile gets built." },
+
+    { type: "h2", text: "What surprised me the most" },
+    { type: "p", text: "I was surprised to learn that Meta can collect information even when you're outside Instagram. Through Business Tools and tracking pixels placed on many websites, your activity across the web can help improve ad targeting. That's in addition to everything happening inside the app." },
+    { type: "p", text: "Another interesting point is location. Even if GPS permission is turned off, Instagram can still estimate where you are using your IP address. The location may not be exact, but it's usually accurate enough for advertising." },
+
+    { type: "h2", text: "Why this makes business sense" },
+    { type: "p", text: "From a business perspective, it makes sense. Instagram is free because advertisers pay for it. Meta says it doesn't sell users' personal data directly. Instead, advertisers describe the audience they want, and Meta's systems use the collected data to show ads to the right people. That keeps user data inside Meta's platform while making its advertising business extremely valuable." },
+    { type: "p", text: "The better Instagram understands your interests, the better it can recommend content and advertisements. In many ways, user data isn't just supporting the product instead it is one of the core products." },
+
+    { type: "h2", text: "The uncomfortable part" },
+    { type: "p", text: "Meta has received major GDPR fines, including a €405 million penalty in 2022 related to children's data. While those numbers sound huge, they are relatively small compared to the company's advertising revenue. From a business point of view, that raises an interesting question: if regulatory penalties don't significantly affect profits, do they really change how companies operate?" },
+
+    { type: "h2", text: "My takeaway" },
+    { type: "p", text: "I still use Instagram, but I look at it differently now. I downloaded my data out of curiosity and was surprised by how much information had been recorded. I also realized that many privacy settings control what other users can see, not necessarily what Meta collects." },
+    { type: "p", text: "My biggest takeaway wasn't that Instagram collects data, It was the understanding on how closely the company's business model depends on that data. As long as targeted advertising remains the main source of revenue, data collection will continue to be a core part of how the platform works." },
+  ]
+},
+{
+  slug: "how-ai-showed-up-in-my-daily-routine",
+  title: "How I Noticed AI in My Daily Routine",
+  subtitle: "I started paying attention to where AI is used in everyday life, and it turned out to be almost everywhere.",
+  date: "Jul 12, 2026",
+  readTime: "4 min read",
+  tags: ["Technology", "AI", "Lifestyle"],
+  excerpt: "We often hear about AI in the news, but it's already helping us every day through the apps we use without us even noticing.",
+
+  content: [
+    {
+      type: "p",
+      text: "When people talk about AI, they usually think about chatbots or futuristic technology. But after paying a little more attention, I realized AI is already part of our everyday routine. It isn't something we actively look for , it's just working quietly in the background to make many apps smarter and more useful.",
+      isLead: true
+    },
+
+    { type: "h2", text: "Google Maps" },
+    {
+      type: "p",
+      text: "Whenever we travel somewhere, maps often changes our route based on traffic. Sometimes it suggests a different road that saves a few minutes. It made me realize that AI is constantly analyzing traffic conditions and helping people reach their destination faster."
+    },
+
+    { type: "h2", text: "Spotify" },
+    {
+      type: "p",
+      text: "Spotify regularly recommends songs and playlists that match what we usually listen to. Many of those suggestions end up becoming my favorites. It's interesting how the app learns our listening habits and keeps improving its recommendations."
+    },
+
+    { type: "h2", text: "Instagram" },
+    {
+      type: "p",
+      text: "The reels and posts that appear on our feed are usually related to what I've watched before. If I spend time watching travel videos or tech content, I start seeing more of the same. AI helps decide what content is most likely to keep me interested."
+    },
+
+    { type: "h2", text: "Online Shopping" },
+    {
+      type: "p",
+      text: "Shopping apps always seem to recommend products that I'm already thinking about buying. After searching for a pair of shoes or a new phone, similar products start appearing everywhere. AI uses browsing history and preferences to make these recommendations feel more personal."
+    },
+
+    { type: "h2", text: "ChatGPT" },
+    {
+      type: "p",
+      text: "Whenever I need a quick explanation, want to organize my thoughts, or improve something I've written, ChatGPT is often my first stop. Instead of searching through multiple websites, I can ask a question directly and usually get a clear answer within seconds."
+    },
+
+    { type: "h2", text: "Final Thoughts" },
+    {
+      type: "p",
+      text: "What surprised me the most is that none of these apps advertise themselves as 'AI apps.' The technology simply works behind the scenes to make everyday tasks easier. Whether it's recommending music, suggesting the fastest route, or showing content I'll probably enjoy, AI has quietly become a normal part of daily life."
+    }
+  ]
+}
+];
+
+(function () {
+    const homeView = document.getElementById("homeView");
+    const articleView = document.getElementById("articleView");
+    const storyList = document.getElementById("storyList");
+    const articleContent = document.getElementById("articleContent");
+    const backBtn = document.getElementById("backBtn");
+    const homeLink = document.getElementById("homeLink");
+
+    function escapeHtml(str) {
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    const THUMB_SVG = `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 19V5a2 2 0 012-2h9l5 5v11a2 2 0 01-2 2H6a2 2 0 01-2-2z" stroke="#fff" stroke-width="1.3"/><path d="M8 12h8M8 16h5M8 8h3" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg>`;
+
+    function renderList() {
+      storyList.innerHTML = "";
+      ARTICLES.forEach((article) => {
+        const story = document.createElement("a");
+        story.href = `#/${article.slug}`;
+        story.className = "story";
+        story.setAttribute("role", "listitem");
+
+        story.innerHTML = `
+          <div class="story__byline">
+            <span class="avatar">${AUTHOR.initials}</span>
+            <span class="story__author">${escapeHtml(AUTHOR.name)}</span>
+          </div>
+          <div class="story__grid">
+            <div>
+              <h2 class="story__title">${escapeHtml(article.title)}</h2>
+              <p class="story__excerpt">${escapeHtml(article.excerpt)}</p>
+              <div class="story__meta">
+                <span>${escapeHtml(article.date)}</span>
+                <span class="story__dot">&middot;</span>
+                <span>${escapeHtml(article.readTime)}</span>
+                <span class="story__tag">${escapeHtml(article.tags[0])}</span>
+              </div>
+            </div>
+            <div class="story__thumb">${THUMB_SVG}</div>
+          </div>
+        `;
+
+        storyList.appendChild(story);
+      });
+    }
+
+    function renderArticle(article) {
+      const body = article.content
+        .map((block) => {
+          if (block.type === "h2") {
+            return `<h2>${escapeHtml(block.text)}</h2>`;
+          }
+          const cls = block.isLead ? "article__lead" : "";
+          // allow a small safe set of inline tags authors write directly (em/strong)
+          return `<p class="${cls}">${block.text}</p>`;
+        })
+        .join("");
+
+      articleContent.innerHTML = `
+        <p class="article__tag">${escapeHtml(article.tags[0])}</p>
+        <h1 class="article__title">${escapeHtml(article.title)}</h1>
+        <p class="article__subtitle">${escapeHtml(article.subtitle)}</p>
+
+        <div class="byline">
+          <span class="avatar avatar--lg">${AUTHOR.initials}</span>
+          <div>
+            <p class="byline__name">${escapeHtml(AUTHOR.name)}</p>
+            <p class="byline__sub">${escapeHtml(article.date)} &middot; ${escapeHtml(article.readTime)}</p>
+          </div>
+        </div>
+
+        <div class="article__body">${body}</div>
+
+        <div class="article__tags-footer">
+          ${article.tags.map((t) => `<span class="pill">${escapeHtml(t)}</span>`).join("")}
+        </div>
+      `;
+    }
+
+    function showHome() {
+      articleView.hidden = true;
+      homeView.hidden = false;
+      document.title = "Anoop Tom — Blog";
+      window.scrollTo(0, 0);
+    }
+
+    function showArticle(slug) {
+      const article = ARTICLES.find((a) => a.slug === slug);
+      if (!article) { showHome(); return; }
+      renderArticle(article);
+      homeView.hidden = true;
+      articleView.hidden = false;
+      document.title = `${article.title} — Anoop Tom`;
+      window.scrollTo(0, 0);
+    }
+
+    function route() {
+      const hash = window.location.hash;
+      if (hash && hash.startsWith("#/") && hash.length > 2) {
+        showArticle(hash.slice(2));
+      } else {
+        showHome();
+      }
+    }
+
+    backBtn.addEventListener("click", () => { window.location.hash = "#/"; });
+    homeLink.addEventListener("click", (e) => { e.preventDefault(); window.location.hash = "#/"; });
+    window.addEventListener("hashchange", route);
+
+    renderList();
+    route();
+  })();
+</script>
+</body>
+</html>
